@@ -2,3 +2,4 @@
 .idea
 venv
 *.zip
+__pycache__

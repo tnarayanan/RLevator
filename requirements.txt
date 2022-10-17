@@ -1,2 +1,3 @@
 numpy
+ipdb
 git+https://github.com/DLR-RM/stable-baselines3
