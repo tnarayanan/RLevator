@@ -18,12 +18,14 @@ TIME_PER_FLOOR = 5
 
 
 class Elevator:
-    def __init__(self, floor: int, target_floor: int):
+    def __init__(self, floor: int, target_floor: int, num_floors):
         self.floor: int = floor
         self.target_floor: int = target_floor
         self.time_to_next_floor: int = 0
         self.state: ElevatorState = ElevatorState.IDLE
         self.requests: dict[int, set[Request]] = {}
+
+        self.num_floors = num_floors
 
     def add_request(self, request: Request):
         if request.target_floor not in self.requests:
@@ -69,8 +71,9 @@ class Elevator:
             self.time_to_next_floor -= 1
             if self.time_to_next_floor == 0:
                 if self.state == ElevatorState.MOVING_UP:
-                    self.floor += 1
-                else:
+                    if self.floor < self.num_floors - 1:
+                        self.floor += 1
+                elif self.floor > 0:
                     self.floor -= 1
                 if self.floor == self.target_floor:
                     self.state = ElevatorState.IDLE
