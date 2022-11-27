@@ -4,7 +4,6 @@ from enum import IntEnum
 
 @dataclass(frozen=True)
 class Request:
-    # TODO: add some unique field here so that two identical requests don't get hashed to the same thing
     time_requested: int
     target_floor: int
 
@@ -24,26 +23,26 @@ class Elevator:
         self.target_floor: int = target_floor
         self.time_to_next_floor: int = 0
         self.state: ElevatorState = ElevatorState.IDLE
-        self.requests: dict[int, set[Request]] = {}
+        self.requests: dict[int, list[Request]] = {}
 
         self.num_floors = num_floors
 
     def add_request(self, request: Request):
         if request.target_floor not in self.requests:
-            self.requests[request.target_floor] = set()
-        self.requests[request.target_floor].add(request)
+            self.requests[request.target_floor] = []
+        self.requests[request.target_floor].append(request)
 
-    def batch_add_requests(self, requests: set[Request], floor: int | None = None):
-        if floor is None:
-            floor = self.floor
-        if floor not in self.requests:
-            self.requests[floor] = set()
-        self.requests[floor].update(requests)
-
-    def remove_request(self, request: Request):
-        if request not in self.requests[request.target_floor]:
-            return
-        self.requests[request.target_floor].remove(request)
+    # def batch_add_requests(self, requests: set[Request], floor: int | None = None):
+    #     if floor is None:
+    #         floor = self.floor
+    #     if floor not in self.requests:
+    #         self.requests[floor] = set()
+    #     self.requests[floor].update(requests)
+    #
+    # def remove_request(self, request: Request):
+    #     if request not in self.requests[request.target_floor]:
+    #         return
+    #     self.requests[request.target_floor].remove(request)
 
     def batch_remove_requests(self, floor: int | None = None) -> int:
         if floor is None:
@@ -56,8 +55,8 @@ class Elevator:
 
     def num_passengers(self):
         n = 0
-        for requests_set in self.requests.values():
-            n += len(requests_set)
+        for requests_list in self.requests.values():
+            n += len(requests_list)
         return n
 
     def update_state(self):

@@ -48,7 +48,7 @@ class ElevatorV1Env(gym.Env):
 
     def _init_state(self):
         self.elevators: list[Elevator] = [Elevator(0, 0, self.num_floors) for _ in range(self.num_elevators)]  # all elevators at ground
-        self.unassigned_requests: dict[int, set[Request]] = {i: set() for i in range(self.num_floors)}
+        self.unassigned_requests: dict[int, list[Request]] = {i: list() for i in range(self.num_floors)}
 
         self.t = 0
 
@@ -113,9 +113,9 @@ class ElevatorV1Env(gym.Env):
             # negative reward per passenger riding
             reward += REWARD_PER_TIMESTEP * elevator.num_passengers()
 
-        for requests_set in self.unassigned_requests.values():
+        for requests_list in self.unassigned_requests.values():
             # negative reward per unassigned request
-            reward += REWARD_PER_TIMESTEP * len(requests_set)
+            reward += REWARD_PER_TIMESTEP * len(requests_list)
 
         # add new requests
         if self.rng.random() < 0.3:
@@ -124,7 +124,7 @@ class ElevatorV1Env(gym.Env):
             if target_floor >= starting_floor:
                 target_floor += 1
 
-            self.unassigned_requests[starting_floor].add(Request(self.t, target_floor))
+            self.unassigned_requests[starting_floor].append(Request(self.t, target_floor))
             self.num_total_requests += 1
 
         self.t += 1
