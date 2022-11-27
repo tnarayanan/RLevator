@@ -120,9 +120,9 @@ class ElevatorV1Env(gym.Env):
         # add new requests
         if self.rng.random() < 0.3:
             starting_floor = self.rng.integers(self.num_floors)
-            target_floor = self.rng.integers(self.num_floors)
-            while target_floor == starting_floor:
-                target_floor = self.rng.integers(self.num_floors)
+            target_floor = self.rng.integers(self.num_floors - 1)
+            if target_floor >= starting_floor:
+                target_floor += 1
 
             self.unassigned_requests[starting_floor].add(Request(self.t, target_floor))
             self.num_total_requests += 1

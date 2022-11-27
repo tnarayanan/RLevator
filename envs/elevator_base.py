@@ -4,6 +4,7 @@ from enum import IntEnum
 
 @dataclass(frozen=True)
 class Request:
+    # TODO: add some unique field here so that two identical requests don't get hashed to the same thing
     time_requested: int
     target_floor: int
 
@@ -18,7 +19,7 @@ TIME_PER_FLOOR = 5
 
 
 class Elevator:
-    def __init__(self, floor: int, target_floor: int, num_floors):
+    def __init__(self, floor: int, target_floor: int, num_floors: int):
         self.floor: int = floor
         self.target_floor: int = target_floor
         self.time_to_next_floor: int = 0
@@ -70,11 +71,12 @@ class Elevator:
         else:
             self.time_to_next_floor -= 1
             if self.time_to_next_floor == 0:
-                if self.state == ElevatorState.MOVING_UP:
-                    if self.floor < self.num_floors - 1:
-                        self.floor += 1
-                elif self.floor > 0:
+                # change self.floor
+                if self.state == ElevatorState.MOVING_UP and self.floor < self.num_floors - 1:
+                    self.floor += 1
+                elif self.state == ElevatorState.MOVING_DOWN and self.floor > 0:
                     self.floor -= 1
+
                 if self.floor == self.target_floor:
                     self.state = ElevatorState.IDLE
                 else:

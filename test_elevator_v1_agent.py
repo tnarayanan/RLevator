@@ -18,8 +18,8 @@ model.learn(total_timesteps=150_000)
 obs = env.reset()
 total_reward = 0
 for i in range(1000):
-    action, _state = model.predict(obs, deterministic=True)
-    obs, reward, done, info = env.step(action)
+    action, _ = model.predict(obs, deterministic=True)
+    obs, reward, done, _ = env.step(action)
     total_reward += reward
     if done:
         print(f"{total_reward = }")
