@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class StandardElevatorController:
+class StandardElevatorV1Controller:
     def __init__(self, env):
         self.env = env
 

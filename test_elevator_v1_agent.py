@@ -1,8 +1,8 @@
 from envs.elevator_v1 import ElevatorV1Env
-from agents.standard_elevator_controller import StandardElevatorController
+from agents.standard_elevator_v1_controller import StandardElevatorV1Controller
 from stable_baselines3 import A2C, PPO
 
-env = ElevatorV1Env(num_elevators=3, num_floors=10, episode_len=300)
+env = ElevatorV1Env(num_elevators=1, num_floors=3, episode_len=300)
 
 # 1 elev 3 floors, ep len 300, 150k, +100 rew on success
 # ppo_mlp/PPO_2
@@ -13,9 +13,9 @@ env = ElevatorV1Env(num_elevators=3, num_floors=10, episode_len=300)
 # a2c_mlp/A2C_10
 
 
-model = PPO("MlpPolicy", env, verbose=1, tensorboard_log="./tensorboard/ppo_mlp/")
-model.learn(total_timesteps=1_000_000)
-# model = StandardElevatorController(env)
+# model = PPO("MlpPolicy", env, verbose=1, tensorboard_log="./tensorboard/ppo_mlp/")
+# model.learn(total_timesteps=1_000_000)
+model = StandardElevatorV1Controller(env)
 
 obs = env.reset()
 total_reward = 0

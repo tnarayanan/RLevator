@@ -8,6 +8,7 @@ MAX_PEOPLE = 50
 
 REWARD_PER_TIMESTEP = -1
 REWARD_PER_SUCCESS = 0
+# REWARD_PER_ENERGY = -1
 
 
 class ElevatorV2Env(gym.Env):
@@ -28,7 +29,7 @@ class ElevatorV2Env(gym.Env):
         obs_space = []
         obs_space.append(self.num_elevators_end + 1)  # cur num elevators
         obs_space.append(self.num_floors_end + 1)  # cur num floors
-        for _ in range(self.num_elevators):
+        for _ in range(self.num_elevators_end):
             obs_space.append(self.num_floors_end)     # floor num
             obs_space.append(self.num_floors_end)     # target floor
             obs_space.append(TIME_PER_FLOOR + 1)  # time to next floor
@@ -144,7 +145,7 @@ class ElevatorV2Env(gym.Env):
 
         # handle action
         assert self.action_space.contains(action), f"Invalid action {action} for space {self.action_space}"
-        for i in range(action.shape[0]):
+        for i in range(self.num_elevators):
             self.elevators[i].target_floor = min(self.num_floors - 1, action[i])
 
         # update elevators, calculate reward

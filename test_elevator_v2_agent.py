@@ -1,17 +1,23 @@
 from envs.elevator_v2 import ElevatorV2Env
-from agents.standard_elevator_controller import StandardElevatorController
+from agents.standard_elevator_v2_controller import StandardElevatorV2Controller
 from stable_baselines3 import A2C, PPO
 from stable_baselines3.common.callbacks import BaseCallback
+import secrets
 
 NUM_ELEVATORS_START = 1
 NUM_ELEVATORS_END = 1
-NUM_FLOORS_START = 3
-NUM_FLOORS_END = 10
+NUM_FLOORS_START = 5
+NUM_FLOORS_END = 5
 
-TOTAL_TIMESTEPS = 10_000
+TOTAL_TIMESTEPS = 2_000_000
 VERBOSE = 0
 
-tensorboard_dir = f"./tensorboard/test_env_v2/elev{NUM_ELEVATORS_START}-{NUM_ELEVATORS_END}_floor{NUM_FLOORS_START}-{NUM_FLOORS_END}/"
+model_identifier = secrets.token_hex(3)
+env_identifier = f"env_v2/elev{NUM_ELEVATORS_START}-{NUM_ELEVATORS_END}_floor{NUM_FLOORS_START}-{NUM_FLOORS_END}"
+
+print(f"Training {env_identifier}/{model_identifier} for {TOTAL_TIMESTEPS} timesteps")
+
+tensorboard_dir = f"./tensorboard/{env_identifier}/{model_identifier}/"
 
 env = ElevatorV2Env(curriculum=True,
                     num_elevators_start=NUM_ELEVATORS_START,
@@ -36,7 +42,9 @@ class TensorboardCallback(BaseCallback):
 
 model = PPO("MlpPolicy", env, verbose=VERBOSE, tensorboard_log=tensorboard_dir)
 model.learn(total_timesteps=TOTAL_TIMESTEPS, callback=TensorboardCallback())
-# model = StandardElevatorController(env)
+model.save(f"./models/{env_identifier}/{model_identifier}")
+# model = PPO.load(f"./models/{env_identifier}/ac2701.zip", env=env)
+# model = StandardElevatorV2Controller(env)
 
 obs = env.reset(override_curriculum=True)
 total_reward = 0
