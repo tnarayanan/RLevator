@@ -88,7 +88,15 @@ class ElevatorV2Env(gym.Env):
         # print(f"{self.num_floors}: {self.num_dropped_off}/{self.num_total_requests}, history = {sum(self.dropped_off_history) / sum(self.requests_history)}")
 
         # check if we should update curriculum
-        if not override_curriculum and len(self.dropped_off_history) >= self.history_len and sum(self.dropped_off_history) > 0.7 * sum(self.requests_history):
+        if self.num_floors <= 4:
+            threshold = 0.7
+        elif self.num_floors <= 6:
+            threshold = 0.5
+        elif self.num_floors <= 8:
+            threshold = 0.375
+        else:
+            threshold = 0.3
+        if not override_curriculum and len(self.dropped_off_history) >= self.history_len and sum(self.dropped_off_history) > threshold * sum(self.requests_history):
             self._update_curriculum()
 
         self._init_state()

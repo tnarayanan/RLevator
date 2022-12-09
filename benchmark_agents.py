@@ -36,20 +36,31 @@ def benchmark_agent(model_filepath, num_episodes=100, num_elevators_start=1, num
 
 
 def main():
+    num_floors = 5
     params = {
         'num_episodes': 100,
         'num_elevators_start': 1,
         'num_elevators_end': 1,
-        'num_floors_start': 5,
-        'num_floors_end': 5
+        'num_floors_start': num_floors,
+        'num_floors_end': num_floors
     }
 
-    models = [
-        "models/env_v2/elev1-1_floor5-5/55d5b7.zip",
-        "models/env_v2/elev1-1_floor5-5/4a3039.zip",
-        "models/env_v2/elev1-1_floor5-5/237766.zip",
-        "Standard Controller"
-    ]
+    if num_floors == 5:
+        models = [
+            "models/env_v2/elev1-1_floor5-5/55d5b7.zip", # GOOD: non-curriculum ~55% on 5 floors
+            # "models/env_v2/elev1-1_floor5-5/4a3039.zip",
+            # "models/env_v2/elev1-1_floor5-5/237766.zip",
+            "models/env_v2/elev1-1_floor3-5/80f213.zip", # GOOD: curriculum ~73% on 5 floors
+            # "models/env_v2/elev1-1_floor3-5/e6e1f1.zip",
+            # "models/env_v2/elev1-1_floor3-5/ee34c4.zip",
+            "Standard Controller"
+        ]
+    elif num_floors == 10:
+        models = [
+            "Standard Controller"
+        ]
+    else:
+        raise AssertionError(f"models not defined for {num_floors} floors")
 
     procs = []
 
