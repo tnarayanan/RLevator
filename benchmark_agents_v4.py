@@ -1,20 +1,30 @@
-from agents.standard_elevator_v3_controller import StandardElevatorV3Controller
-from envs.elevator_v3 import ElevatorV3Env
+from agents.standard_elevator_v4_controller import StandardElevatorV4Controller
+from envs.elevator_v4 import ElevatorV4Env
 from stable_baselines3 import A2C, PPO
 from tqdm import tqdm
 from multiprocessing import Process, Pool
 
+import torch
+import numpy as np
+import random
+
 
 def benchmark_agent(model_filepath, num_episodes=100, num_elevators_start=1, num_elevators_end=1, num_floors_start=3, num_floors_end=3):
-    env = ElevatorV3Env(curriculum=True,
+    RANDOM_SEED = 0
+    torch.manual_seed(RANDOM_SEED)
+    np.random.seed(RANDOM_SEED)
+    random.seed(RANDOM_SEED)
+
+    env = ElevatorV4Env(curriculum=True,
                         num_elevators_start=num_elevators_start,
                         num_elevators_end=num_elevators_end,
                         num_floors_start=num_floors_start,
                         num_floors_end=num_floors_end,
-                        episode_len=300)
+                        episode_len=300,
+                        random_seed=RANDOM_SEED)
 
     if model_filepath == "Standard Controller":
-        model = StandardElevatorV3Controller(env)
+        model = StandardElevatorV4Controller(env)
     else:
         model = PPO.load(model_filepath, env=env)
 
@@ -51,11 +61,9 @@ def main():
     if num_floors == 5:
         models = [
             # "models/env_v2/elev1-1_floor5-5/55d5b7.zip", # GOOD: non-curriculum ~55% on 5 floors
-            "models/env_v3/elev1-1_floor5-5_rand0/d825aa.zip",  # GOOD: non-curriculum, random seeded
             # "models/env_v2/elev1-1_floor5-5/4a3039.zip",
             # "models/env_v2/elev1-1_floor5-5/237766.zip",
             # "models/env_v2/elev1-1_floor3-5/80f213.zip", # GOOD: curriculum ~73% on 5 floors
-            "models/env_v3/elev1-1_floor3-5_rand0/3ba8f7.zip",  # GOOD: non-curriculum, random seeded
             # "models/env_v2/elev1-1_floor3-5/e6e1f1.zip",
             # "models/env_v2/elev1-1_floor3-5/ee34c4.zip",
             "Standard Controller"
