@@ -11,7 +11,7 @@ REWARD_PER_SUCCESS = 0
 # REWARD_PER_ENERGY = -1
 
 
-class ElevatorV3Env(gym.Env):
+class ElevatorV5Env(gym.Env):
     metadata = {"render.modes": ["human"], "video.frames_per_second": 15}
 
     def __init__(self, num_elevators_start: int = 1, num_floors_start: int = 3, curriculum: bool = False, num_elevators_end: int = -1, num_floors_end: int = -1, episode_len: int = 200, random_seed: int = 0, request_prob: float = 0.3):
@@ -33,6 +33,7 @@ class ElevatorV3Env(gym.Env):
             obs_space.append(self.num_floors_end)     # floor num
             obs_space.append(self.num_floors_end)     # target floor
             obs_space.append(TIME_PER_FLOOR + 1)  # time to next floor
+            obs_space.append(3)                   # previous direction
             obs_space.append(3)                   # direction
             for _ in range(self.num_floors_end):
                 obs_space.append(2)      # whether a floor button is pressed in the elevator
@@ -66,6 +67,7 @@ class ElevatorV3Env(gym.Env):
 
         self.num_dropped_off = 0
         self.num_total_requests = 0
+        self.prev_elev_direction = [ElevatorState.IDLE for _ in range(self.num_elevators_end)]
 
     def _reset_history(self):
         self.history_len = 10
@@ -115,6 +117,7 @@ class ElevatorV3Env(gym.Env):
             obs.append(self.elevators[i].floor)  # floor num
             obs.append(self.elevators[i].target_floor)  # target floor
             obs.append(self.elevators[i].time_to_next_floor)  # time to next floor
+            obs.append(self.prev_elev_direction[i])  # prev direction
             obs.append(self.elevators[i].state)  # direction
             for j in range(self.num_floors):
                 obs.append(int(len(self.elevators[i].requests.get(j, [])) > 0))  # whether a button in the elevator is pressed
@@ -156,8 +159,8 @@ class ElevatorV3Env(gym.Env):
         for _ in range(self.num_floors_end - self.num_floors):
             obs.append(0)
 
-        # print(f"{obs=}")
-        # print(f"{self.observation_space=}")
+        print(f"{obs=}")
+        print(f"{self.observation_space=}")
         assert self.observation_space.contains(np.array(obs))
         return np.array(obs)
         # return {
@@ -179,7 +182,8 @@ class ElevatorV3Env(gym.Env):
 
         # update elevators, calculate reward
         reward = 0
-        for elevator in self.elevators:
+        for elev_idx, elevator in enumerate(self.elevators):
+            self.prev_elev_direction[elev_idx] = elevator.state
             elevator.update_state()
 
             if elevator.state == ElevatorState.IDLE:

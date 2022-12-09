@@ -34,6 +34,28 @@ class StandardElevatorV3Controller:
         action = np.zeros(self.env.num_elevators_end)
 
         for elev_id, elev in enumerate(elevators):
+            # all_stops_down = set()
+            # all_stops_up = set()
+            # for i in range(self.env.num_floors):
+            #     if elev['requests'][i] == 1:
+            #         if i > elev['floor']:
+            #             all_stops_up.add(i)
+            #         else:
+            #             all_stops_down.add(i)
+            #     if down_pressed[i]:
+            #         all_stops_down.add(i)
+            #     if up_pressed[i]:
+            #         all_stops_up.add(i)
+            #
+            # selected_action = None
+            # if elev['direction'] == 0:
+            #     # already moving down, select next closest floor that's below
+            #     selected_action = max([floor for floor in all_stops_down if floor < elev['floor']])
+            # elif elev['direction'] == 2:
+            #     selected_action = min([floor for floor in all_stops_down if floor > elev['floor']])
+            # else:
+            #
+
             closest_stop_below = None
             for i in reversed(range(0, elev['floor'])):
                 if elev['requests'][i] == 1 or down_pressed[i] == 1:  # if person in elevator wants to get off at `i` or down is pressed on `i`
@@ -45,6 +67,8 @@ class StandardElevatorV3Controller:
                 if elev['requests'][i] == 1 or up_pressed[i] == 1:  # if person in elevator wants to get off at `i` or up is pressed on `i`
                     closest_stop_above = i
                     break
+
+            print(down_pressed, up_pressed)
 
             if elev['direction'] == 0 and closest_stop_below is not None:
                 action[elev_id] = closest_stop_below
