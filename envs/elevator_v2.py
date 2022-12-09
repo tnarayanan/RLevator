@@ -14,7 +14,7 @@ REWARD_PER_SUCCESS = 0
 class ElevatorV2Env(gym.Env):
     metadata = {"render.modes": ["human"], "video.frames_per_second": 15}
 
-    def __init__(self, num_elevators_start: int = 1, num_floors_start: int = 3, curriculum: bool = False, num_elevators_end: int = -1, num_floors_end: int = -1, episode_len: int = 200):
+    def __init__(self, num_elevators_start: int = 1, num_floors_start: int = 3, curriculum: bool = False, num_elevators_end: int = -1, num_floors_end: int = -1, episode_len: int = 200, random_seed: int = 0):
         self.num_elevators: int = num_elevators_start
         self.num_floors: int = num_floors_start
         self.curriculum = curriculum
@@ -46,7 +46,7 @@ class ElevatorV2Env(gym.Env):
         )
 
         self._init_state()
-        self.rng = np.random.default_rng()
+        self.rng = np.random.default_rng(random_seed)
 
         self.num_dropped_off = 0
         self.num_total_requests = 0

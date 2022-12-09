@@ -3,17 +3,28 @@ from agents.standard_elevator_v2_controller import StandardElevatorV2Controller
 from stable_baselines3 import A2C, PPO
 from stable_baselines3.common.callbacks import BaseCallback
 import secrets
+import torch
+import numpy as np
+import random
+
+# generate model identifier before resetting seeds
+model_identifier = secrets.token_hex(3)
+
+RANDOM_SEED = 0
+torch.manual_seed(RANDOM_SEED)
+np.random.seed(RANDOM_SEED)
+random.seed(RANDOM_SEED)
+
 
 NUM_ELEVATORS_START = 1
 NUM_ELEVATORS_END = 1
 NUM_FLOORS_START = 3
-NUM_FLOORS_END = 10
+NUM_FLOORS_END = 5
 
-TOTAL_TIMESTEPS = 4_000_000
+TOTAL_TIMESTEPS = 2_000_000
 VERBOSE = 0
 
-model_identifier = secrets.token_hex(3)
-env_identifier = f"env_v2/elev{NUM_ELEVATORS_START}-{NUM_ELEVATORS_END}_floor{NUM_FLOORS_START}-{NUM_FLOORS_END}"
+env_identifier = f"env_v2/elev{NUM_ELEVATORS_START}-{NUM_ELEVATORS_END}_floor{NUM_FLOORS_START}-{NUM_FLOORS_END}_rand{RANDOM_SEED}"
 
 print(f"Training {env_identifier}/{model_identifier} for {TOTAL_TIMESTEPS} timesteps")
 
@@ -24,7 +35,8 @@ env = ElevatorV2Env(curriculum=True,
                     num_elevators_end=NUM_ELEVATORS_END,
                     num_floors_start=NUM_FLOORS_START,
                     num_floors_end=NUM_FLOORS_END,
-                    episode_len=300)
+                    episode_len=300,
+                    random_seed=RANDOM_SEED)
 
 
 class TensorboardCallback(BaseCallback):
