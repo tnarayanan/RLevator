@@ -27,18 +27,17 @@ env.elevators[0].add_request(Request(0, 0))
 env.unassigned_requests = {4: [Request(0, 0)]}
 # env.num_total_requests += 2
 
-model = StandardElevatorV5Controller(env)
-# model = PPO("MlpPolicy", env, verbose=VERBOSE, tensorboard_log=tensorboard_dir)
+# model = StandardElevatorV5Controller(env)
+model = PPO.load("models/env_v3/elev1-1_floor3-5_rand0/3ba8f7.zip", env=env)
 obs = env.get_obs()
 import ipdb
 for i in range(100):
-    # ipdb.set_trace()
+    ipdb.set_trace()
     action, _ = model.predict(obs, deterministic=True)
     print(f"target floor: {action[0]}")
     obs, reward, done, _ = env.step(action)
     print(env.elevators[0])
     print(env.unassigned_requests)
 
-ipdb.set_trace()
 
 

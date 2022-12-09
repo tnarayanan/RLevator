@@ -55,10 +55,10 @@ class StandardElevatorV5Controller:
             up_floors_below = [floor for floor in all_stops_up if floor < elev['floor']]
             up_floors_above = [floor for floor in all_stops_down if floor > elev['floor']]
 
-            if elev['direction'] == 0:
+            if elev['direction'] == 0 and len(down_floors_below) > 0:
                 # already moving down, select next closest floor that's below
                 selected_action = max(down_floors_below)
-            elif elev['direction'] == 2:
+            elif elev['direction'] == 2 and len(up_floors_above) > 0:
                 selected_action = min(up_floors_above)
             else:
                 if elev['prev_direction'] == 0:

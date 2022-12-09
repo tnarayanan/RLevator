@@ -159,8 +159,8 @@ class ElevatorV5Env(gym.Env):
         for _ in range(self.num_floors_end - self.num_floors):
             obs.append(0)
 
-        print(f"{obs=}")
-        print(f"{self.observation_space=}")
+        # print(f"{obs=}")
+        # print(f"{self.observation_space=}")
         assert self.observation_space.contains(np.array(obs))
         return np.array(obs)
         # return {

@@ -68,7 +68,7 @@ class StandardElevatorV3Controller:
                     closest_stop_above = i
                     break
 
-            print(down_pressed, up_pressed)
+            # print(down_pressed, up_pressed)
 
             if elev['direction'] == 0 and closest_stop_below is not None:
                 action[elev_id] = closest_stop_below
