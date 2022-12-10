@@ -1,5 +1,5 @@
-from envs.elevator_v5 import ElevatorV5Env
-from agents.standard_elevator_v5_controller import StandardElevatorV5Controller
+from envs.elevator_v6 import ElevatorV6Env
+from agents.standard_elevator_v6_controller import StandardElevatorV6Controller
 from stable_baselines3 import A2C, PPO
 from stable_baselines3.common.callbacks import BaseCallback
 import secrets
@@ -18,19 +18,19 @@ random.seed(RANDOM_SEED)
 
 NUM_ELEVATORS_START = 1
 NUM_ELEVATORS_END = 1
-NUM_FLOORS_START = 5
-NUM_FLOORS_END = 5
+NUM_FLOORS_START = 3
+NUM_FLOORS_END = 3
 
-TOTAL_TIMESTEPS = 2_000_000
+TOTAL_TIMESTEPS = 500_000
 VERBOSE = 0
 
-env_identifier = f"env_v5/elev{NUM_ELEVATORS_START}-{NUM_ELEVATORS_END}_floor{NUM_FLOORS_START}-{NUM_FLOORS_END}_rand{RANDOM_SEED}"
+env_identifier = f"env_v6/elev{NUM_ELEVATORS_START}-{NUM_ELEVATORS_END}_floor{NUM_FLOORS_START}-{NUM_FLOORS_END}_rand{RANDOM_SEED}"
 
 print(f"Training {env_identifier}/{model_identifier} for {TOTAL_TIMESTEPS} timesteps")
 
 tensorboard_dir = f"./tensorboard/{env_identifier}/{model_identifier}/"
 
-env = ElevatorV5Env(curriculum=True,
+env = ElevatorV6Env(curriculum=True,
                     num_elevators_start=NUM_ELEVATORS_START,
                     num_elevators_end=NUM_ELEVATORS_END,
                     num_floors_start=NUM_FLOORS_START,
@@ -52,14 +52,11 @@ class TensorboardCallback(BaseCallback):
         return True
 
 
-policy_kwargs = dict(activation_fn=torch.nn.Tanh,
-                     net_arch=[dict(pi=[64, 64, 64], vf=[64, 64, 64])])
-model = PPO("MlpPolicy", env, verbose=VERBOSE, tensorboard_log=tensorboard_dir, policy_kwargs=policy_kwargs)
-# print(model.policy)
+model = PPO("MlpPolicy", env, verbose=VERBOSE, tensorboard_log=tensorboard_dir)
 model.learn(total_timesteps=TOTAL_TIMESTEPS, callback=TensorboardCallback())
 model.save(f"./models/{env_identifier}/{model_identifier}")
 # model = PPO.load(f"./models/{env_identifier}/ac2701.zip", env=env)
-# model = StandardElevatorV5Controller(env)
+# model = StandardElevatorV6Controller(env)
 
 obs = env.reset(override_curriculum=True)
 total_reward = 0

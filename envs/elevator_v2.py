@@ -10,7 +10,9 @@ REWARD_PER_TIMESTEP = -1
 REWARD_PER_SUCCESS = 0
 # REWARD_PER_ENERGY = -1
 
-
+"""
+CHANGES: curriculum learning support
+"""
 class ElevatorV2Env(gym.Env):
     metadata = {"render.modes": ["human"], "video.frames_per_second": 15}
 

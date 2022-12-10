@@ -11,9 +11,9 @@ REWARD_PER_SUCCESS = 0
 # REWARD_PER_ENERGY = -1
 
 """
-CHANGES: take away information of how many people are in the elevator/waiting, only provide button state info
+CHANGES: squared reward
 """
-class ElevatorV3Env(gym.Env):
+class ElevatorV6Env(gym.Env):
     metadata = {"render.modes": ["human"], "video.frames_per_second": 15}
 
     def __init__(self, num_elevators_start: int = 1, num_floors_start: int = 3, curriculum: bool = False, num_elevators_end: int = -1, num_floors_end: int = -1, episode_len: int = 200, random_seed: int = 0, request_prob: float = 0.3):
@@ -35,6 +35,7 @@ class ElevatorV3Env(gym.Env):
             obs_space.append(self.num_floors_end)     # floor num
             obs_space.append(self.num_floors_end)     # target floor
             obs_space.append(TIME_PER_FLOOR + 1)  # time to next floor
+            obs_space.append(3)                   # previous direction
             obs_space.append(3)                   # direction
             for _ in range(self.num_floors_end):
                 obs_space.append(2)      # whether a floor button is pressed in the elevator
@@ -48,6 +49,11 @@ class ElevatorV3Env(gym.Env):
         self.action_space: spaces.Space = spaces.MultiDiscrete(
             [self.num_floors_end for _ in range(self.num_elevators_end)]  # target floor for each elevator
         )
+        # act_space = []
+        # for _ in range(self.num_elevators_end):
+        #     for _ in range(self.num_floors_end):  # one-hot target floor for each elevator
+        #         act_space.append(2)
+        # self.action_space: spaces.Space = spaces.MultiDiscrete(act_space)
 
         self.request_prob = request_prob
 
@@ -68,6 +74,7 @@ class ElevatorV3Env(gym.Env):
 
         self.num_dropped_off = 0
         self.num_total_requests = 0
+        self.prev_elev_direction = [ElevatorState.IDLE for _ in range(self.num_elevators_end)]
 
     def _reset_history(self):
         self.history_len = 10
@@ -117,6 +124,7 @@ class ElevatorV3Env(gym.Env):
             obs.append(self.elevators[i].floor)  # floor num
             obs.append(self.elevators[i].target_floor)  # target floor
             obs.append(self.elevators[i].time_to_next_floor)  # time to next floor
+            obs.append(self.prev_elev_direction[i])  # prev direction
             obs.append(self.elevators[i].state)  # direction
             for j in range(self.num_floors):
                 obs.append(int(len(self.elevators[i].requests.get(j, [])) > 0))  # whether a button in the elevator is pressed
@@ -178,10 +186,14 @@ class ElevatorV3Env(gym.Env):
         assert self.action_space.contains(action), f"Invalid action {action} for space {self.action_space}"
         for i in range(self.num_elevators):
             self.elevators[i].target_floor = min(self.num_floors - 1, action[i])
+        # for i in range(self.num_elevators):
+        #     start = i * self.num_floors_end
+        #     self.elevators[i].target_floor = np.argmax(action[start: start + self.num_floors])
 
         # update elevators, calculate reward
         reward = 0
-        for elevator in self.elevators:
+        for elev_idx, elevator in enumerate(self.elevators):
+            self.prev_elev_direction[elev_idx] = elevator.state
             elevator.update_state()
 
             if elevator.state == ElevatorState.IDLE:
@@ -196,11 +208,16 @@ class ElevatorV3Env(gym.Env):
                 self.unassigned_requests[elevator.floor] = []
 
             # negative reward per passenger riding
-            reward += REWARD_PER_TIMESTEP * elevator.num_passengers()
+            for elev_floor in range(self.num_floors):
+                for request in elevator.requests.get(elev_floor, []):
+                    reward -= 2 * (self.t - request.time_requested) - 1
+            # reward -= (REWARD_PER_TIMESTEP * elevator.num_passengers()) ** 2
 
         for requests_list in self.unassigned_requests.values():
             # negative reward per unassigned request
-            reward += REWARD_PER_TIMESTEP * len(requests_list)
+            # reward -= (REWARD_PER_TIMESTEP * len(requests_list)) ** 2
+            for request in requests_list:
+                reward -= 2 * (self.t - request.time_requested) - 1
 
         # add new requests
         if self.rng.random() < self.request_prob:

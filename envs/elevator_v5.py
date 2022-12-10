@@ -10,7 +10,9 @@ REWARD_PER_TIMESTEP = -1
 REWARD_PER_SUCCESS = 0
 # REWARD_PER_ENERGY = -1
 
-
+"""
+CHANGES: previous direction, no one-hot for most of observations, no one-hot actions
+"""
 class ElevatorV5Env(gym.Env):
     metadata = {"render.modes": ["human"], "video.frames_per_second": 15}
 

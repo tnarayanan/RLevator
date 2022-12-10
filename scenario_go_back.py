@@ -8,8 +8,8 @@ RANDOM_SEED = 0
 
 NUM_ELEVATORS_START = 1
 NUM_ELEVATORS_END = 1
-NUM_FLOORS_START = 5
-NUM_FLOORS_END = 5
+NUM_FLOORS_START = 3
+NUM_FLOORS_END = 3
 
 env = ElevatorV5Env(curriculum=True,
                     num_elevators_start=NUM_ELEVATORS_START,
@@ -20,15 +20,15 @@ env = ElevatorV5Env(curriculum=True,
                     random_seed=RANDOM_SEED,
                     request_prob=0)
 
-env.elevators[0].floor = 3
+env.elevators[0].floor = 1
 env.elevators[0].state = 0
 env.elevators[0].time_to_next_floor = 5
 env.elevators[0].add_request(Request(0, 0))
-env.unassigned_requests = {4: [Request(0, 0)]}
+env.unassigned_requests = {2: [Request(0, 0)]}
 # env.num_total_requests += 2
 
 # model = StandardElevatorV5Controller(env)
-model = PPO.load("models/env_v3/elev1-1_floor3-5_rand0/3ba8f7.zip", env=env)
+model = PPO.load("models/env_v5/elev1-1_floor3-3_rand1/56e28e.zip", env=env)
 obs = env.get_obs()
 import ipdb
 for i in range(100):
