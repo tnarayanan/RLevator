@@ -1,5 +1,5 @@
-from envs.elevator_v1 import ElevatorV1Env
+from envs.elevator_v5_go_back import ElevatorV5GoBackEnv
 import ipdb
 
-env = ElevatorV1Env()
+env = ElevatorV5GoBackEnv()
 ipdb.set_trace()
