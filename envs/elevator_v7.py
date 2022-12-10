@@ -56,6 +56,7 @@ class ElevatorV7Env(gym.Env):
 
         self.num_dropped_off = 0
         self.num_total_requests = 0
+        self.episode_rew = 0
 
         self._reset_history()
 
@@ -68,12 +69,14 @@ class ElevatorV7Env(gym.Env):
 
         self.num_dropped_off = 0
         self.num_total_requests = 0
+        self.episode_rew = 0
         self.prev_elev_direction = [ElevatorState.IDLE for _ in range(self.num_elevators_end)]
 
     def _reset_history(self):
         self.history_len = 10
         self.dropped_off_history = []
         self.requests_history = []
+        self.reward_history = []
 
     def _update_curriculum(self):
         if self.num_elevators < self.num_elevators_end and (self.num_floors - self.num_floors_start) / (self.num_floors_end - self.num_floors_start) >= (self.num_elevators + 1 - self.num_elevators_start) / (self.num_elevators_end - self.num_elevators_start):
@@ -88,26 +91,30 @@ class ElevatorV7Env(gym.Env):
     def reset(self, override_curriculum=False, log=False):
         self.dropped_off_history.append(self.num_dropped_off)
         self.requests_history.append(self.num_total_requests)
+        self.reward_history.append(self.episode_rew)
         if len(self.dropped_off_history) > self.history_len:
             self.dropped_off_history.pop(0)
             self.requests_history.pop(0)
+            self.reward_history.pop(0)
 
         # print(f"{self.num_floors}: {self.num_dropped_off}/{self.num_total_requests}, history = {sum(self.dropped_off_history) / sum(self.requests_history)}")
 
         # check if we should update curriculum
-        if self.num_floors <= 4:
-            threshold = 0.95
-        elif self.num_floors <= 5:
-            threshold = 0.92
-        elif self.num_floors <= 6:
-            threshold = 0.85
-        elif self.num_floors <= 7:
-            threshold = 0.75
-        elif self.num_floors <= 8:
-            threshold = 0.7
-        else:
-            threshold = 0.6
-        if not override_curriculum and len(self.dropped_off_history) >= self.history_len and sum(self.dropped_off_history) > threshold * sum(self.requests_history):
+        # if self.num_floors <= 4:
+        #     threshold = 0.95
+        # elif self.num_floors <= 5:
+        #     threshold = 0.92
+        # elif self.num_floors <= 6:
+        #     threshold = 0.9
+        # elif self.num_floors <= 7:
+        #     threshold = 0.85
+        # elif self.num_floors <= 8:
+        #     threshold = 0.8
+        # else:
+        #     threshold = 0.75
+        threshold = -80 - 50 * (self.num_floors - 3)
+        # if not override_curriculum and len(self.dropped_off_history) >= self.history_len and sum(self.dropped_off_history) > threshold * sum(self.requests_history):
+        if not override_curriculum and len(self.reward_history) >= self.history_len and sum(self.reward_history) / self.history_len > threshold:
             self._update_curriculum()
 
         self._init_state()
@@ -226,5 +233,7 @@ class ElevatorV7Env(gym.Env):
         # print(self.unassigned_requests)
 
         done = self.t > self.episode_len
+
+        self.episode_rew += reward
 
         return self.get_obs(), reward, done, {}

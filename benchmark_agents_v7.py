@@ -75,6 +75,7 @@ def main():
         models = [
             "models/env_v7/elev1-1_floor10-10_rand0/95967f.zip", # non-curriculum
             "models/env_v7/elev1-1_floor3-10_rand0/b4d488.zip", # curriculum
+            "models/env_v7/elev1-1_floor3-10_rand0/6d7dae.zip", # curriculum with reward
             "Standard Controller"
         ]
     else:
