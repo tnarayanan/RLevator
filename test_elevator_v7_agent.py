@@ -10,7 +10,7 @@ import random
 # generate model identifier before resetting seeds
 model_identifier = secrets.token_hex(3)
 
-RANDOM_SEED = 0
+RANDOM_SEED = 2
 torch.manual_seed(RANDOM_SEED)
 np.random.seed(RANDOM_SEED)
 random.seed(RANDOM_SEED)
@@ -18,8 +18,8 @@ random.seed(RANDOM_SEED)
 
 NUM_ELEVATORS_START = 1
 NUM_ELEVATORS_END = 1
-NUM_FLOORS_START = 3
-NUM_FLOORS_END = 10
+NUM_FLOORS_START = 8
+NUM_FLOORS_END = 8
 
 TOTAL_TIMESTEPS = 1_000_000
 VERBOSE = 0

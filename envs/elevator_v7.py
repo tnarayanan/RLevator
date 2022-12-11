@@ -11,7 +11,7 @@ REWARD_PER_SUCCESS = 0
 # REWARD_PER_ENERGY = -1
 
 """
-CHANGES: same as v5 but use base v2 (elevator can switch directions, no time per floor)
+CHANGES: same as v5 but use base v2 (elevator can switch directions, no time per floor), use reward for curriculum
 """
 class ElevatorV7Env(gym.Env):
     metadata = {"render.modes": ["human"], "video.frames_per_second": 15}

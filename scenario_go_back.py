@@ -1,5 +1,6 @@
 from envs.elevator_v5_go_back import ElevatorV5GoBackEnv
 from agents.standard_elevator_v5_go_back_controller import StandardElevatorV5GoBackController
+from agents.standard_elevator_v7_controller import StandardElevatorV7Controller
 from stable_baselines3 import A2C, PPO
 from envs.elevator_base import Request
 
@@ -8,8 +9,8 @@ RANDOM_SEED = 0
 
 NUM_ELEVATORS_START = 1
 NUM_ELEVATORS_END = 1
-NUM_FLOORS_START = 5
-NUM_FLOORS_END = 5
+NUM_FLOORS_START = 8
+NUM_FLOORS_END = 8
 
 env = ElevatorV5GoBackEnv(curriculum=True,
                           num_elevators_start=NUM_ELEVATORS_START,
@@ -27,7 +28,8 @@ env = ElevatorV5GoBackEnv(curriculum=True,
 # env.num_total_requests += 2
 
 # model = StandardElevatorV5GoBackController(env)
-model = PPO.load("models/env_v5_go_back/elev1-1_floor5-5_rand0/47d0ab.zip", env=env)
+# model = StandardElevatorV7Controller(env)
+model = PPO.load("models/env_v7/elev1-1_floor3-8_rand0/0e7c72.zip", env=env)
 obs = env.get_obs()
 import ipdb
 for i in range(100):
