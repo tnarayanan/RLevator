@@ -28,18 +28,6 @@ class Elevator:
             self.requests[request.target_floor] = []
         self.requests[request.target_floor].append(request)
 
-    # def batch_add_requests(self, requests: set[Request], floor: int | None = None):
-    #     if floor is None:
-    #         floor = self.floor
-    #     if floor not in self.requests:
-    #         self.requests[floor] = set()
-    #     self.requests[floor].update(requests)
-    #
-    # def remove_request(self, request: Request):
-    #     if request not in self.requests[request.target_floor]:
-    #         return
-    #     self.requests[request.target_floor].remove(request)
-
     def batch_remove_requests(self, floor: int | None = None) -> int:
         if floor is None:
             floor = self.floor

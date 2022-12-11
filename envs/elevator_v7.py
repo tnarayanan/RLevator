@@ -97,23 +97,7 @@ class ElevatorV7Env(gym.Env):
             self.requests_history.pop(0)
             self.reward_history.pop(0)
 
-        # print(f"{self.num_floors}: {self.num_dropped_off}/{self.num_total_requests}, history = {sum(self.dropped_off_history) / sum(self.requests_history)}")
-
-        # check if we should update curriculum
-        # if self.num_floors <= 4:
-        #     threshold = 0.95
-        # elif self.num_floors <= 5:
-        #     threshold = 0.92
-        # elif self.num_floors <= 6:
-        #     threshold = 0.9
-        # elif self.num_floors <= 7:
-        #     threshold = 0.85
-        # elif self.num_floors <= 8:
-        #     threshold = 0.8
-        # else:
-        #     threshold = 0.75
         threshold = -80 - 50 * (self.num_floors - 3)
-        # if not override_curriculum and len(self.dropped_off_history) >= self.history_len and sum(self.dropped_off_history) > threshold * sum(self.requests_history):
         if not override_curriculum and len(self.reward_history) >= self.history_len and sum(self.reward_history) / self.history_len > threshold:
             self._update_curriculum()
 
@@ -170,18 +154,8 @@ class ElevatorV7Env(gym.Env):
         for _ in range(self.num_floors_end - self.num_floors):
             obs.append(0)
 
-        # print(f"{obs=}")
-        # print(f"{self.observation_space=}")
         assert self.observation_space.contains(np.array(obs))
         return np.array(obs)
-        # return {
-        #     'floor': np.array([self.elevators[i].floor for i in range(self.num_elevators)]),
-        #     'target_floor': np.array([self.elevators[i].target_floor for i in range(self.num_elevators)]),
-        #     'time_to_next_floor': np.array([self.elevators[i].time_to_next_floor for i in range(self.num_elevators)]),
-        #     'direction': np.array([self.elevators[i].state - 1 for i in range(self.num_elevators)]),
-        #     'num_people': np.array([len(self.elevators[i].requests.get(j, [])) for j in range(self.num_floors) for i in range(self.num_elevators)]),
-        #     'waiting': np.array([len(self.unassigned_requests.get(j, [])) for j in range(self.num_floors)])
-        # }
 
     def step(self, action: np.ndarray):
         """Returns (state, reward, done, info)"""
@@ -227,10 +201,6 @@ class ElevatorV7Env(gym.Env):
 
         self.t += 1
         self.total_t += 1
-
-        # print(f"{self.t = }, {reward = }")
-        # print(self.elevators[0])
-        # print(self.unassigned_requests)
 
         done = self.t > self.episode_len
 
