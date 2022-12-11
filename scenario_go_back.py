@@ -1,5 +1,5 @@
-from envs.elevator_v5_go_back import ElevatorV5GoBackEnv
-from agents.standard_elevator_v5_go_back_controller import StandardElevatorV5GoBackController
+from envs.elevator_v5_double_back import ElevatorV5GoBackEnv
+from agents.standard_elevator_v5_double_back_controller import StandardElevatorV5GoBackController
 from agents.standard_elevator_v7_controller import StandardElevatorV7Controller
 from stable_baselines3 import A2C, PPO
 from envs.elevator_base import Request

@@ -1,5 +1,5 @@
-from envs.elevator_v5_go_back import ElevatorV5GoBackEnv
-from agents.standard_elevator_v5_go_back_controller import StandardElevatorV5GoBackController
+from envs.elevator_v5_double_back import ElevatorV5GoBackEnv
+from agents.standard_elevator_v5_double_back_controller import StandardElevatorV5GoBackController
 from stable_baselines3 import A2C, PPO
 from stable_baselines3.common.callbacks import BaseCallback
 import secrets
