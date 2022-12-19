@@ -24,16 +24,16 @@ class TensorboardCallback(BaseCallback):
 def main(args):
     num_elevators_start = 1
     num_elevators_end = 1
-    num_floors_start = args.num_floors_start
-    num_floors_end = args.num_floors_end
+    num_floors_start = int(args.num_floors_start)
+    num_floors_end = int(args.num_floors_end)
 
-    total_timesteps = args.timesteps
-    verbose = args.verbose
+    total_timesteps = int(args.timesteps)
+    verbose = int(args.verbose)
 
     # generate model identifier before resetting seeds
     model_identifier = secrets.token_hex(3)
 
-    random_seed = args.seed
+    random_seed = int(args.seed)
     torch.manual_seed(random_seed)
     np.random.seed(random_seed)
     random.seed(random_seed)

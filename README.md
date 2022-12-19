@@ -52,7 +52,8 @@ options:
   --num_floors NUM_FLOORS, -n NUM_FLOORS
                         number of floors for environment
   --models MODELS [MODELS ...], -m MODELS [MODELS ...]
-                        Paths to models to be evaluated
+                        Paths to models to be evaluated. Example path: models/env_v7/elev1-1_floor3-3_rand1/dd23f6.zip
+                        
 ```
 
 This program will evaluate the models provided, along with the standard control algorithm, and provide

@@ -51,7 +51,7 @@ def benchmark_agent(model_filepath, num_episodes=100, num_elevators_start=1, num
 
 
 def main(args):
-    num_floors = args.num_floors
+    num_floors = int(args.num_floors)
     models = args.models
     models.append("Standard Controller")
     params = {
