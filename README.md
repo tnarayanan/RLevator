@@ -2,6 +2,8 @@
 
 A dynamic elevator control algorithm trained using reinforcement learning.
 
+![RLevator Double-Back Scenario](images/RLevator.gif "RLevator Double-Back Scenario") ![Karps Double-Back Scenario](images/Karps.gif "Karps Double-Back Scenario")
+
 Created for the CS 229 Fall 2022 final project by Tejas Narayanan and Kiran Bhat.
 
 ## Installation instructions
