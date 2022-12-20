@@ -3,9 +3,9 @@
 A dynamic elevator control algorithm trained using reinforcement learning.
 
 <p align="center">
-  <img alt="RLevator" src="images/RLevator.gif" width="45%">
+  <img alt="RLevator" src="images/RLevator.gif" width="40%">
 &nbsp; &nbsp; &nbsp; &nbsp;
-  <img alt="Karps" src="images/Karps.gif" width="45%">
+  <img alt="Karps" src="images/Karps.gif" width="40%">
 </p>
 
 Created for the CS 229 Fall 2022 final project by Tejas Narayanan and Kiran Bhat.
