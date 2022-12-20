@@ -59,6 +59,8 @@ options:
                         number of floors for environment
   --models MODELS [MODELS ...], -m MODELS [MODELS ...]
                         Paths to models to be evaluated. Example path: models/env_v7/elev1-1_floor3-3_rand1/dd23f6.zip
+  --animation_delay ANIMATION_DELAY, -a ANIMATION_DELAY
+                        Animation delay (in seconds) between timesteps. Larger delay -> slower animation. Animation is off by default.
                         
 ```
 

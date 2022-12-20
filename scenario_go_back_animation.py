@@ -25,25 +25,18 @@ env = ElevatorV5GoBackEnv(curriculum=True,
 
 
 # model = StandardElevatorV5GoBackController(env)
-model = StandardElevatorV7Controller(env)
+# model = StandardElevatorV7Controller(env)
 # model = PPO.load("models/env_v7/elev1-1_floor3-3_rand1/dd23f6.zip", env=env)
-# model = PPO.load("models/env_v7/elev1-1_floor5-5_rand0/9b9f8c.zip", env=env)
+model = PPO.load("models/env_v7/elev1-1_floor5-5_rand0/9b9f8c.zip", env=env)
 obs = env.get_obs()
 
 
-animation = ElevatorAnimation(env, title="Karp's Algorithm Double-Back Scenario")
+animation = ElevatorAnimation(env, title="RLevator Double-Back Scenario")
 
-
-import ipdb
 for i in range(100):
-    # ipdb.set_trace()
     animation.set_environment(env)
     animation.draw_environment()
     action, _ = model.predict(obs, deterministic=True)
-    # print(f"target floor: {action[0]}")
     obs, reward, done, _ = env.step(action)
-
-    # print(env.elevators[0])
-    # print(env.unassigned_requests)
 
 
