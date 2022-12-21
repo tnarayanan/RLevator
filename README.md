@@ -8,7 +8,7 @@ A dynamic elevator control algorithm trained using reinforcement learning.
   <img alt="Karps" src="images/Karps.gif" width="40%">
 </p>
 
-Created for the CS 229 Fall 2022 final project by Tejas Narayanan and Kiran Bhat.
+Created for the CS 229 Fall 2022 final project by Tejas Narayanan and Kiran Bhat. [Read the paper here](https://drive.google.com/file/d/1RTHAwy3tp1AcMzzuSxwWKuBABh1-ZDOZ/view?usp=sharing).
 
 ## Installation instructions
 
